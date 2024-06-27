@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 namespace BackendAPI.Models
 {
-    public class Juegos
+    public class juegos
     {
         [Key]
         public int Id { get; set; }

@@ -8,7 +8,7 @@ builder.Services.AddDbContext<GamesContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("GamesSQLITE"))
 );
 
-// Configurar CORS para permitir cualquier origen, m�todo y encabezado
+// Configurar CORS para permitir cualquier origen, método y encabezado
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
@@ -24,11 +24,17 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+// Aplicar migraciones automáticamente
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<GamesContext>();
+    dbContext.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -36,6 +42,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 

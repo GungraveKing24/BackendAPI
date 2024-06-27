@@ -10,6 +10,6 @@ namespace BackendAPI.Models
         {
 
         }
-        public DbSet<Juegos> juegos { get; set; }
+        public DbSet<juegos> juegos { get; set; }
     }
 }

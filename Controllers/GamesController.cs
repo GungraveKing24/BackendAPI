@@ -24,8 +24,16 @@ namespace BackendAPI.Controllers
         [HttpGet]
         public IActionResult GetData()
         {
-            var juegos = _context.juegos.ToList();
-            return Ok(juegos);
+            try
+            {
+                var games = _context.juegos.ToList(); // Asegúrate de que 'Games' es el nombre correcto del DbSet
+                return Ok(games);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500, "Internal server error");
+            }
         }
     }
 }
