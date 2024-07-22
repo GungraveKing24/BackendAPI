@@ -89,9 +89,9 @@ namespace BackendAPI.Controllers
         private async Task<string> SubirArchivo(Stream archivoSubir, string nombreArchivo, string child)
         {
             string email = "jorgefranciscocz@gmail.com";
-            string clave = "ContraseñaXDXD";
-            string ruta = "desarolloweb-7ffb8.appspot.com";
-            string apikey = "AIzaSyBbIwF8pmsda6lLtldYsro7e_Aa_SCNGq0";
+            string clave = "Contrasenaxd54";
+            string ruta = "composite-sun-374501.appspot.com";
+            string apikey = "AIzaSyDxmS6QxnaFnnhybus3Z8KNjeQuVXSeaWU";
 
             var auth = new FirebaseAuthProvider(new FirebaseConfig(apikey));
             var autentificar = await auth.SignInWithEmailAndPasswordAsync(email, clave);
