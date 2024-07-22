@@ -41,29 +41,28 @@ namespace BackendAPI.Controllers
 
         [HttpPost]
         public async Task<IActionResult> PostData(
-    [Bind("Id,juego,estado,runN,rejugando,DatosAdicionales,Calificacion,img,fecha_finalizado")]
-    juegos newgame, [FromForm] IFormFile img)
+                        [Bind("Id, juego, estado, runN, rejugando, DatosAdicionales, Calificacion, img, fecha_finalizado")]
+                        juegos newgame,
+                        IFormFile imagen)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return BadRequest(ModelState);
-            }
-
-            if (img != null && img.Length > 0)
-            {
-                using (var archivoSubido = img.OpenReadStream())
+                if (imagen != null && imagen.Length > 0)
                 {
-                    string child = "FotosTest";
-                    string urlArchivo = await SubirArchivo(archivoSubido, img.FileName, child);
+                    Stream archivoSubido = imagen.OpenReadStream();
+                    string urlArchivo = await SubirArchivo(archivoSubido, imagen.FileName, "FotosTest");
                     newgame.img = urlArchivo;
                 }
+
+                _context.juegos.Add(newgame);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(GetData), new { id = newgame.Id }, newgame);
             }
 
-            _context.juegos.Add(newgame);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetDataById), new { id = newgame.Id }, newgame);
+            return BadRequest(ModelState);
         }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDataById(int id)
