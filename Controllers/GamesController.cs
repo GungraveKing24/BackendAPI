@@ -41,39 +41,32 @@ namespace BackendAPI.Controllers
 
         [HttpPost]
         public async Task<IActionResult> PostData(
-                        [Bind("juego, estado, runN, rejugando, DatosAdicionales, Calificacion, img, fecha_finalizado")]
-                        juegos newgame,
-                        IFormFile imagen)
+                    [Bind("id,juego,estado,runN,rejugando,DatosAdicionales,Calificacion,fecha_finalizado")] juegos newgame,
+                    IFormFile img)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                if (imagen != null && imagen.Length > 0)
+                return BadRequest(ModelState);
+            }
+
+            if (img != null && img.Length > 0)
+            {
+                using (var stream = new MemoryStream())
                 {
-                    Stream archivoSubido = imagen.OpenReadStream();
-                    string urlArchivo = await SubirArchivo(archivoSubido, imagen.FileName, "FotosTest");
-                    newgame.img = urlArchivo;
+                    await img.CopyToAsync(stream);
+                    stream.Position = 0;
+                    // Subir el archivo a Firebase u otro almacenamiento aquí
+                    string urlarchivo = await SubirArchivo(stream, img.FileName, "FotosTest");
+                    newgame.img = urlarchivo;
                 }
-
-                _context.juegos.Add(newgame);
-                await _context.SaveChangesAsync();
-
-                return CreatedAtAction(nameof(GetData), new { id = newgame.Id }, newgame);
             }
 
-            return BadRequest(ModelState);
+            _context.juegos.Add(newgame);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetData), new { id = newgame.Id }, newgame);
         }
 
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetDataById(int id)
-        {
-            var game = await _context.juegos.FindAsync(id);
-            if (game == null)
-            {
-                return NotFound();
-            }
-            return Ok(game);
-        }
 
         // Método para subir archivo a Firebase Storage
         private async Task<string> SubirArchivo(Stream archivoSubir, string nombreArchivo, string child)
