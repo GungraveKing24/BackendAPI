@@ -39,34 +39,15 @@ namespace BackendAPI.Controllers
             }
         }
 
+        // POST: api/Juegos
         [HttpPost]
-        public async Task<IActionResult> PostData(
-                    [Bind("juego,estado,runN,rejugando,DatosAdicionales,Calificacion,fecha_finalizado")] juegos newgame,
-                    IFormFile img)
+        public async Task<ActionResult<juegos>> PostJuego(juegos juego)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (img != null && img.Length > 0)
-            {
-                using (var stream = new MemoryStream())
-                {
-                    await img.CopyToAsync(stream);
-                    stream.Position = 0;
-                    // Subir el archivo a Firebase u otro almacenamiento aquí
-                    string urlarchivo = await SubirArchivo(stream, img.FileName, "FotosTest");
-                    newgame.img = urlarchivo;
-                }
-            }
-
-            _context.juegos.Add(newgame);
+            _context.Juegos.Add(juego);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetData), new { id = newgame.Id }, newgame);
+            return CreatedAtAction(nameof(GetJuegos), new { id = juego.Id }, juego);
         }
-
 
         // Método para subir archivo a Firebase Storage
         private async Task<string> SubirArchivo(Stream archivoSubir, string nombreArchivo, string child)
