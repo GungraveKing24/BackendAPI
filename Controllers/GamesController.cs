@@ -29,7 +29,7 @@ namespace BackendAPI.Controllers
         {
             try
             {
-                var games = _context.juegos.ToList(); // Asegúrate de que 'Games' es el nombre correcto del DbSet
+                var games = _context.juegos.ToList();
                 return Ok(games);
             }
             catch (Exception ex)
@@ -68,7 +68,16 @@ namespace BackendAPI.Controllers
 
             if (img != null && img.Length > 0)
             {
-                // Manejar la carga del archivo (si es necesario)
+                try
+                {
+                    var fileName = Guid.NewGuid() + Path.GetExtension(img.FileName);
+                    var fileUrl = await SubirArchivo(img.OpenReadStream(), fileName, "images");
+                    newgame.img = fileUrl;
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, "Error uploading image: " + ex.Message);
+                }
             }
 
             _context.juegos.Add(newgame);
@@ -77,5 +86,28 @@ namespace BackendAPI.Controllers
             return CreatedAtAction(nameof(GetData), new { id = newgame.Id }, newgame);
         }
 
+        private async Task<string> SubirArchivo(Stream archivoSubir, string nombreArchivo, string child)
+        {
+            // Configura tu autenticación de Firebase de forma segura
+            string apiKey = "tu-api-key";
+            string bucket = "tu-bucket.appspot.com";
+            string email = "tu-email";
+            string password = "tu-password";
+
+            var auth = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
+            var autentificar = await auth.SignInWithEmailAndPasswordAsync(email, password);
+            var tokenuser = autentificar.FirebaseToken;
+
+            var firebaseStorage = new FirebaseStorage(bucket, new FirebaseStorageOptions
+            {
+                AuthTokenAsyncFactory = () => Task.FromResult(tokenuser),
+                ThrowOnCancel = true
+            });
+
+            var uploadTask = firebaseStorage.Child(child).Child(nombreArchivo).PutAsync(archivoSubir);
+            var urlcarga = await uploadTask;
+
+            return urlcarga;
+        }
     }
 }
