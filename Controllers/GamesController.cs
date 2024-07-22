@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BackendAPI.Models;
-
+using Firebase.Storage;
+using Firebase.Auth;
 
 namespace BackendAPI.Controllers
 {
@@ -39,12 +40,18 @@ namespace BackendAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<juegos>> PostJuego(juegos juego)
+        public async Task<IActionResult> PostData(
+            [Bind("juego,estado,runN,rejugando,DatosAdicionales,Calificacion,fecha_finalizado")] juegos newgame)
         {
-            _context.Juegos.Add(juego);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _context.juegos.Add(newgame);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetJuegos), new { id = juego.Id }, juego);
+            return CreatedAtAction(nameof(GetData), new { id = newgame.Id }, newgame);
         }
     }
 }
