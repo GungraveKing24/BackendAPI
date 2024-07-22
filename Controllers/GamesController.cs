@@ -8,8 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BackendAPI.Models;
-using Firebase.Storage;
-using Firebase.Auth;
+
 
 namespace BackendAPI.Controllers
 {
@@ -39,7 +38,6 @@ namespace BackendAPI.Controllers
             }
         }
 
-        // POST: api/Juegos
         [HttpPost]
         public async Task<ActionResult<juegos>> PostJuego(juegos juego)
         {
@@ -47,34 +45,6 @@ namespace BackendAPI.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetJuegos), new { id = juego.Id }, juego);
-        }
-
-        // Método para subir archivo a Firebase Storage
-        private async Task<string> SubirArchivo(Stream archivoSubir, string nombreArchivo, string child)
-        {
-            string email = "jorgefranciscocz@gmail.com";
-            string clave = "ContraseñaXDXD";
-            string ruta = "desarolloweb-7ffb8.appspot.com";
-            string apikey = "AIzaSyBbIwF8pmsda6lLtldYsro7e_Aa_SCNGq0";
-
-            var auth = new FirebaseAuthProvider(new FirebaseConfig(apikey));
-            var autentificar = await auth.SignInWithEmailAndPasswordAsync(email, clave);
-            var cancellation = new CancellationTokenSource();
-            var tokenuser = autentificar.FirebaseToken;
-
-            var cargararchivo = new FirebaseStorage(ruta,
-                new FirebaseStorageOptions
-                {
-                    AuthTokenAsyncFactory = () => Task.FromResult(tokenuser),
-                    ThrowOnCancel = true
-                }
-            ).Child(child)
-            .Child(nombreArchivo)
-            .PutAsync(archivoSubir, cancellation.Token);
-
-            var urlcarga = await cargararchivo;
-
-            return urlcarga;
         }
     }
 }
