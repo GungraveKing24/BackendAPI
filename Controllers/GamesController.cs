@@ -41,11 +41,34 @@ namespace BackendAPI.Controllers
 
         [HttpPost]
         public async Task<IActionResult> PostData(
-            [Bind("juego,estado,runN,rejugando,DatosAdicionales,Calificacion")] juegos newgame)
+            [FromForm] string juego,
+            [FromForm] string estado,
+            [FromForm] int? runN,
+            [FromForm] string rejugando,
+            [FromForm] string DatosAdicionales,
+            [FromForm] decimal? Calificacion,
+            [FromForm] DateTime? fecha_finalizado,
+            [FromForm] IFormFile img)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            var newgame = new juegos
+            {
+                juego = juego,
+                estado = estado,
+                runN = runN,
+                rejugando = rejugando,
+                DatosAdicionales = DatosAdicionales,
+                Calificacion = Calificacion,
+                fecha_finalizado = fecha_finalizado
+            };
+
+            if (img != null && img.Length > 0)
+            {
+                // Manejar la carga del archivo (si es necesario)
             }
 
             _context.juegos.Add(newgame);
@@ -53,5 +76,6 @@ namespace BackendAPI.Controllers
 
             return CreatedAtAction(nameof(GetData), new { id = newgame.Id }, newgame);
         }
+
     }
 }
