@@ -41,7 +41,7 @@ namespace BackendAPI.Controllers
 
         [HttpPost]
         public async Task<IActionResult> PostData(
-                        [Bind("Id, juego, estado, runN, rejugando, DatosAdicionales, Calificacion, img, fecha_finalizado")]
+                        [Bind("juego, estado, runN, rejugando, DatosAdicionales, Calificacion, img, fecha_finalizado")]
                         juegos newgame,
                         IFormFile imagen)
         {
