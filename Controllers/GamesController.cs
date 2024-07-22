@@ -41,7 +41,7 @@ namespace BackendAPI.Controllers
 
         [HttpPost]
         public async Task<IActionResult> PostData(
-            [Bind("juego,estado,runN,rejugando,DatosAdicionales,Calificacion,fecha_finalizado")] juegos newgame)
+            [Bind("juego,estado,runN,rejugando,DatosAdicionales,Calificacion")] juegos newgame)
         {
             if (!ModelState.IsValid)
             {
