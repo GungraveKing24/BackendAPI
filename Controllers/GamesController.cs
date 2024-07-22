@@ -88,17 +88,16 @@ namespace BackendAPI.Controllers
 
         private async Task<string> SubirArchivo(Stream archivoSubir, string nombreArchivo, string child)
         {
-            // Configura tu autenticación de Firebase de forma segura
-            string apiKey = "tu-api-key";
-            string bucket = "tu-bucket.appspot.com";
-            string email = "tu-email";
-            string password = "tu-password";
+            string email = "jorgefranciscocz@gmail.com";
+            string clave = "ContraseñaXDXD";
+            string ruta = "desarolloweb-7ffb8.appspot.com";
+            string apikey = "AIzaSyBbIwF8pmsda6lLtldYsro7e_Aa_SCNGq0";
 
-            var auth = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
-            var autentificar = await auth.SignInWithEmailAndPasswordAsync(email, password);
+            var auth = new FirebaseAuthProvider(new FirebaseConfig(apikey));
+            var autentificar = await auth.SignInWithEmailAndPasswordAsync(email, clave);
             var tokenuser = autentificar.FirebaseToken;
 
-            var firebaseStorage = new FirebaseStorage(bucket, new FirebaseStorageOptions
+            var firebaseStorage = new FirebaseStorage(ruta, new FirebaseStorageOptions
             {
                 AuthTokenAsyncFactory = () => Task.FromResult(tokenuser),
                 ThrowOnCancel = true
