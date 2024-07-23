@@ -88,8 +88,8 @@ namespace BackendAPI.Controllers
 
         private async Task<string> SubirArchivo(Stream archivoSubir, string nombreArchivo, string child)
         {
-            string email = "jorgefranciscocz@gmail.com";
-            string clave = "Contrasenaxd54";
+            string email = "gungraveheat123@gmail.com";
+            string clave = "TheKing242546";
             string ruta = "composite-sun-374501.appspot.com";
             string apikey = "AIzaSyDxmS6QxnaFnnhybus3Z8KNjeQuVXSeaWU";
 
