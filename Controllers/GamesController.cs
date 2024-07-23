@@ -71,7 +71,7 @@ namespace BackendAPI.Controllers
                 try
                 {
                     var fileName = Guid.NewGuid() + Path.GetExtension(img.FileName);
-                    var fileUrl = await SubirArchivo(img.OpenReadStream(), fileName, "images");
+                    var fileUrl = await SubirArchivo(img.OpenReadStream(), fileName, "GamesIMG");
                     newgame.img = fileUrl;
                 }
                 catch (Exception ex)
